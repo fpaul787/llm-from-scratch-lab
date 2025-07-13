@@ -16,8 +16,11 @@ class GPTLab:
     """A class representing a GPT Lab environment."""
 
     def __init__(self):
+        self.__tokens__ = None
+        self.__token_tensor__ = None
         self.config = GPT_CONFIG_124M
         self.tokenizer = Tokenizer(encoding_name="gpt2")
+        
     
     def __tensorize_tokens__(self, tokens, with_batch_dim=True):
         """Converts tokens to a tensor format."""
@@ -30,6 +33,6 @@ class GPTLab:
         print("Running GPT Lab...")
         print("Tokenizing and tensorizing input text...")
         # Tokenize the input text
-        tokens = self.tokenizer.tokenize(text)
+        self.__tokens__ = self.tokenizer.tokenize(text)
         # Tensorize the tokens
-        token_tensor = self.__tensorize_tokens__(tokens)
+        self.__token_tensor__ = self.__tensorize_tokens__(self.__tokens__)
