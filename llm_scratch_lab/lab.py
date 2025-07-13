@@ -1,4 +1,6 @@
 from llm_scratch_lab.tokenizer import Tokenizer
+from llm_scratch_lab.models.gpt import GPTModel
+
 import torch
 
 # Define the configuration for the GPT model
@@ -20,7 +22,7 @@ class GPTLab:
         self.__token_tensor__ = None
         self.config = GPT_CONFIG_124M
         self.tokenizer = Tokenizer(encoding_name="gpt2")
-        
+        self.model = GPTModel(self.config)
     
     def __tensorize_tokens__(self, tokens, with_batch_dim=True):
         """Converts tokens to a tensor format."""
@@ -31,8 +33,10 @@ class GPTLab:
 
     def run(self, text):
         print("Running GPT Lab...")
-        print("Tokenizing and tensorizing input text...")
+        print("Tokenizing the input text...")
         # Tokenize the input text
         self.__tokens__ = self.tokenizer.tokenize(text)
+
+        print("Converting tokens to PyTorch tensor...")
         # Tensorize the tokens
         self.__token_tensor__ = self.__tensorize_tokens__(self.__tokens__)
