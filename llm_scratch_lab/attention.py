@@ -28,9 +28,29 @@ class SelfAttention(nn.Module):
     
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, d_input, d_output, num_heads):
+    def __init__(self, d_input, d_output, num_heads, context_length, qkv_bias=False):
         super().__init__()
-        pass
+        assert d_output % num_heads == 0, "Output dimension must be divisible by number of heads."
 
-    def forward(self, x):
+        self.d_input = d_input
+        self.d_output = d_output
+        self.num_heads = num_heads
+        self.context_length = context_length
+        self.qkv_bias = qkv_bias
+
+        self.W_query = nn.Linear(self.d_input, self.d_output, bias=qkv_bias)
+        self.W_key = nn.Linear(self.d_input, self.d_output, bias=qkv_bias)
+        self.W_value = nn.Linear(self.d_input, self.d_output, bias=qkv_bias)
+        self.output = nn.Linear(self.d_output, self.d_output)
+
+        # Create a mask to prevent attention to future tokens
+        self.register_buffer("mask", torch.triu(torch.ones(context_length, context_length), diagonal=1))
+
+    def forward(self, input_tensor):
+        batch_size, num_tokens = input_tensor.shape
+
+        keys = self.W_key(input_tensor)
+        queries = self.W_query(input_tensor)
+        values = self.W_value(input_tensor)
+
         pass
