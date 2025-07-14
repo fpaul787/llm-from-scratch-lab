@@ -2,6 +2,7 @@ import torch.nn as nn
 import torch
 
 class SelfAttention(nn.Module):
+    """Self-attention mechanism for processing input tensors."""
     def __init__(self, d_input, d_output):
         super().__init__()
         self.W_query = nn.Linear(torch.rand(d_input, d_output))
@@ -28,6 +29,11 @@ class SelfAttention(nn.Module):
     
 
 class MultiHeadAttention(nn.Module):
+    """
+    Multi-head attention mechanism for processing input tensors.
+
+    This combines a Causal Self-Attention mechanism with multiple heads to allow the model to jointly attend to information from different representation subspaces.
+    """
     def __init__(self, d_input, d_output, num_heads, context_length, qkv_bias=False):
         super().__init__()
         assert d_output % num_heads == 0, "Output dimension must be divisible by number of heads."
