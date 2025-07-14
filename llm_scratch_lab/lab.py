@@ -5,9 +5,9 @@ import torch
 
 # Define the configuration for the GPT model
 GPT_CONFIG_124M = {
-    "vocab_size": 50257,     # Vocabulary size
+    "vocabulary_size": 50257,     # Vocabulary size
     "context_length": 1024,  # Context length
-    "emb_dim": 768,          # Embedding dimension
+    "embedding_dimension": 768,          # Embedding dimension
     "n_heads": 12,           # Number of attention heads
     "n_layers": 12,          # Number of layers
     "drop_rate": 0.1,        # Dropout rate
@@ -40,3 +40,4 @@ class GPTLab:
         print("Converting tokens to PyTorch tensor...")
         # Tensorize the tokens
         self.__token_tensor__ = self.__tensorize_tokens__(self.__tokens__)
+        print("Tokens:", self.__token_tensor__)
