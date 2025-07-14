@@ -37,6 +37,7 @@ class MultiHeadAttention(nn.Module):
         self.num_heads = num_heads
         self.context_length = context_length
         self.qkv_bias = qkv_bias
+        self.head_dim = d_output // num_heads
 
         self.W_query = nn.Linear(self.d_input, self.d_output, bias=qkv_bias)
         self.W_key = nn.Linear(self.d_input, self.d_output, bias=qkv_bias)
@@ -47,10 +48,33 @@ class MultiHeadAttention(nn.Module):
         self.register_buffer("mask", torch.triu(torch.ones(context_length, context_length), diagonal=1))
 
     def forward(self, input_tensor):
-        batch_size, num_tokens = input_tensor.shape
+        batch_size, num_tokens, embedding_dim = input_tensor.shape
 
+        # project input tensor to queries, keys, and values
         keys = self.W_key(input_tensor)
         queries = self.W_query(input_tensor)
         values = self.W_value(input_tensor)
 
-        pass
+        # Split the embeddings into multiple heads (reshape and transpose)
+        keys = keys.view(batch_size, num_tokens, self.head_dim)
+        queries = queries.view(batch_size, num_tokens, self.head_dim)
+        values = values.view(batch_size, num_tokens, self.head_dim)
+
+        key = keys.transpose(1, 2)
+        queries = queries.transpose(1, 2)
+        values = values.transpose(1, 2)
+
+        # Calculate attention scores (scaled dot-product attention)
+        attention_scores = queries @ key.transpose(2, 3) # Dot product for each head
+
+        # mask the future tokens
+        mask_bool = self.mask.bool()[:num_tokens, :num_tokens]
+
+        attention_weights = torch.softmax(attention_scores / keys.shape[-1]**0.5, dim=-1)
+        # could apply dropout here if needed
+
+        context_vector = (attention_weights @ values).transpose(1, 2)  # Combine heads back to original shape
+
+        context_vector = context_vector.contiguous().view(batch_size, num_tokens, self.d_output)
+        context_vector = self.output(context_vector)  # Final linear layer to combine heads
+        return context_vector
