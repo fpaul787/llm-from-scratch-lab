@@ -76,8 +76,11 @@ class MultiHeadAttention(nn.Module):
         # mask the future tokens
         mask_bool = self.mask.bool()[:num_tokens, :num_tokens]
 
+        # Apply the mask to the attention scores
+        attention_scores.masked_fill_(mask_bool, -torch.inf)
+
         attention_weights = torch.softmax(attention_scores / keys.shape[-1]**0.5, dim=-1)
-        # could apply dropout here if needed
+
 
         context_vector = (attention_weights @ values).transpose(1, 2)  # Combine heads back to original shape
 
