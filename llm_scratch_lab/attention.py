@@ -42,7 +42,7 @@ class MultiHeadAttention(nn.Module):
         self.d_output = d_output
         self.num_heads = num_heads
         self.context_length = context_length
-        self.qkv_bias = qkv_bias
+        self.qkv_bias = qkv_bias #variable to control whether to use bias in the linear layers
         self.head_dim = d_output // num_heads
 
         self.W_query = nn.Linear(self.d_input, self.d_output, bias=qkv_bias)
