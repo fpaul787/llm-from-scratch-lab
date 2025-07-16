@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 
+
 class GPTModel(nn.Module):
     def __init__(self, config):
         super().__init__()
@@ -8,6 +9,11 @@ class GPTModel(nn.Module):
         self.__token_embedding__ = nn.Embedding(self.config["vocabulary_size"], self.config["embedding_dimension"]) # Token embedding layer
         self.__position_embedding__ = nn.Embedding(self.config["context_length"], self.config["embedding_dimension"]) # Position embedding layer
         # Dropout is optional
+
+        # Initialize transformer blocks
+        self.transformer_blocks = None
+
+
     
     def forward(self, input_tensor):
         """
