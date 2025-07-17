@@ -1,6 +1,7 @@
 import torch.nn as nn
 
 from llm_scratch_lab.attention import MultiHeadAttention
+from llm_scratch_lab.model_utils import FeedForward, LayerNormalization
 
 class TransformerBlock(nn.Module):
     def __init__(self, config):
@@ -12,5 +13,21 @@ class TransformerBlock(nn.Module):
             context_length=config["context_length"]
         )
 
+        self.feed_forward = FeedForward(config)
+        self.layer_normalization1 = LayerNormalization(config["embedding_dimension"])
+        self.layer_normalization2 = LayerNormalization(config["embedding_dimension"])
+
     def forward(self, x):
-        pass
+        # Shortcut connection for attention block
+        shortcut = x
+        x = self.norm1(x)
+        x = self.att(x)   # Shape [batch_size, num_tokens, emb_size]
+        x = x + shortcut  # Add the original input back
+
+        # Shortcut connection for feed-forward block
+        shortcut = x
+        x = self.norm2(x)
+        x = self.ff(x)
+        x = x + shortcut  # Add the original input back
+
+        return x
