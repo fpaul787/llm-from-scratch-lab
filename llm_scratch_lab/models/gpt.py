@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
 
+from llm_scratch_lab.transformer import TransformerBlock
+from llm_scratch_lab.model_utils import LayerNormalization
 
 class GPTModel(nn.Module):
     def __init__(self, config):
@@ -11,7 +13,13 @@ class GPTModel(nn.Module):
         # Dropout is optional
 
         # Initialize transformer blocks
-        self.transformer_blocks = None
+        self.transformer_blocks = nn.Sequential(
+            *[TransformerBlock(config) for _ in range(self.config["num_layers"])]
+        )
+
+        # Final layer to project the output to vocabulary size
+        self.final_normalization = LayerNormalization(self.config["embedding_dimension"])
+        self.output_layer = nn.Linear(self.config["embedding_dimension"], self.config["vocabulary_size"])
 
 
     
@@ -33,4 +41,8 @@ class GPTModel(nn.Module):
         position_embeddings = self.__position_embedding__(torch.arange(seq_length, device=input_tensor.device)) # Position embedding lookup
         
         x = token_embeddings + position_embeddings # Combine token and position embeddings
-        pass
+
+        x = self.transformer_blocks(x) # Pass through transformer blocks
+        x = self.final_normalization(x) # Final normalization layer
+        x = self.output_layer(x)
+        return x
