@@ -32,7 +32,7 @@ class GPTModel(nn.Module):
         Returns:
             TBD
         """
-        batch_size, seq_length = input_tensor.shape
+        _, seq_length = input_tensor.shape
 
         # Retrieves the meanings of the input tokens (words)
         token_embeddings = self.__token_embedding__(input_tensor) # Token embedding lookup.
@@ -44,5 +44,5 @@ class GPTModel(nn.Module):
 
         x = self.transformer_blocks(x) # Pass through transformer blocks
         x = self.final_normalization(x) # Final normalization layer
-        x = self.output_layer(x)
-        return x
+        logits = self.output_layer(x) # logic vector for each token in the vocabulary
+        return logits
