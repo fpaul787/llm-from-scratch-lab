@@ -8,8 +8,8 @@ GPT_CONFIG_124M = {
     "vocabulary_size": 50257,     # Vocabulary size
     "context_length": 1024,  # Context length
     "embedding_dimension": 768,          # Embedding dimension
-    "n_heads": 12,           # Number of attention heads
-    "n_layers": 12,          # Number of layers
+    "num_heads": 12,           # Number of attention heads
+    "num_layers": 12,          # Number of layers
     "drop_rate": 0.1,        # Dropout rate
     "qkv_bias": False        # Query-Key-Value bias
 }
@@ -41,3 +41,21 @@ class GPTLab:
         # Tensorize the tokens
         self.__token_tensor__ = self.__tensorize_tokens__(self.__tokens__)
         print("Tokens:", self.__token_tensor__)
+
+        print("Running the GPT model...")
+        
+        max_tokens = 10
+        for _ in range(max_tokens):
+
+            token_cond = self.__token_tensor__[:, -self.config["context_length"]:]
+
+            with torch.no_grad():
+                logits = self.model(token_cond)
+
+            logits = logits[:, -1, :]
+
+            next_token = torch.argmax(logits, dim=-1, keepdim=True)  # Get the next token
+            self.__token_tensor__ = torch.cat((self.__token_tensor__, next_token), dim=1)
+
+        decoded_text = self.tokenizer.detokenize(self.__token_tensor__.squeeze(0).tolist())
+        print("Decoded text:", decoded_text)
