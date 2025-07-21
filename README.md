@@ -8,3 +8,6 @@ It is still very much a work in progress, and in some regards, a little incomple
 
 ## Usage
 There is a `run_lab.py` script that can be used to run the lab. It will send a piece of text to the lab and the lab will perform the preprocessing, tokenization, and model inference steps. The output will be printed to the console.
+
+## Package Installation
+TBD
