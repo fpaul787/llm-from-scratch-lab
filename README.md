@@ -1,5 +1,5 @@
 # llm-from-scratch-lab
-Small lab for building a small GPT model. This code was adapted from the [Build a Large Language Model (From Scratch)](https://github.com/rasbt/LLMs-from-scratch) repository. This lab is intended to be a learning exercise, not a production-ready implementation.
+Lab for building a small GPT model. This code was adapted from the [Build a Large Language Model (From Scratch)](https://github.com/rasbt/LLMs-from-scratch) repository. This lab is intended to be a learning exercise, not a production-ready implementation.
 It is still very much a work in progress, and in some regards, a little incomplete. However, it is a good starting point for understanding how to build a small GPT model from scratch.
 
 ## Requirements
