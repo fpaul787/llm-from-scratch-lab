@@ -20,14 +20,14 @@ class TransformerBlock(nn.Module):
     def forward(self, x):
         # Shortcut connection for attention block
         shortcut = x
-        x = self.norm1(x)
-        x = self.att(x)   # Shape [batch_size, num_tokens, emb_size]
+        x = self.layer_normalization1(x)
+        x = self.attention(x)   # Shape [batch_size, num_tokens, emb_size]
         x = x + shortcut  # Add the original input back
 
         # Shortcut connection for feed-forward block
         shortcut = x
-        x = self.norm2(x)
-        x = self.ff(x)
+        x = self.layer_normalization2(x)
+        x = self.feed_forward(x)
         x = x + shortcut  # Add the original input back
 
         return x
