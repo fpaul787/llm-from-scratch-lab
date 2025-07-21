@@ -62,9 +62,9 @@ class MultiHeadAttention(nn.Module):
         values = self.W_value(input_tensor)
 
         # Split the embeddings into multiple heads (reshape and transpose)
-        keys = keys.view(batch_size, num_tokens, self.head_dim)
-        queries = queries.view(batch_size, num_tokens, self.head_dim)
-        values = values.view(batch_size, num_tokens, self.head_dim)
+        keys = keys.view(batch_size, num_tokens, self.num_heads, self.head_dim)
+        queries = queries.view(batch_size, num_tokens, self.num_heads, self.head_dim)
+        values = values.view(batch_size, num_tokens, self.num_heads, self.head_dim)
 
         key = keys.transpose(1, 2)
         queries = queries.transpose(1, 2)
