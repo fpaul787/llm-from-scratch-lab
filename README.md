@@ -8,7 +8,7 @@ There is a `run_lab.py` script that can be used to run the lab. It will send a p
 ## Package Usage
 Install the package using pip:
 ```bash
-pip install llm-from-scratch-lab
+pip install llm-scratch-lab
 ```
 
 Then, you can use the package in your Python scripts:
